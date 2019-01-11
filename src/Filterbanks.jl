@@ -1,6 +1,20 @@
 module Filterbanks
 
+"""
+    Filterbank(length::Int, windows::Vector{Vector{Number}}, windowstarts::Vector{Int})
 
+A representation of a filterbank to be applied to a signal with `length`
+samples. The `windows` is a vector of vectors, each representing the nonzero
+part of a filter and the `windowstarts` is a vector containing the start of
+the nonzero portion of the filter.
+
+The `*` operator is overloaded to apply the filterbank to a signal as if the
+filterbank were a matrix and an multiplication was performed, but in a more
+optimized way.
+
+
+See also: [`getfilters`](@ref), [`applyfilters`](@ref)
+"""
 struct Filterbank
 	length::Int
 	windows::Vector{Vector{Number}}
@@ -17,6 +31,14 @@ Base.:*(filterbank::Filterbank, signal::AbstractArray) = begin
 end
 
 
+"""
+    getfilters(filterbank::Filterbank)
+
+Return a vector containing vectors filled with the values of each filter of the
+given filterbank, including the zero portion.
+
+See also: [`applyfilters`](@ref)
+"""
 function getfilters(filterbank::Filterbank)
 
 	return hcat(map((window, winstart)->
@@ -42,6 +64,13 @@ function filtermesh(filterbank::Filterbank)
 end
 
 
+"""
+    applyfilters(signal, filterbank::Filterbank)
+
+Apply a filterbank to a signal and return the result.
+
+See also: [`getfilters`](@ref)
+"""
 function applyfilters(signal, filterbank::Filterbank)
 
 	return hcat(map((window, winstart)->
