@@ -1,7 +1,7 @@
 module MFCC
 
 
-using DSP
+using DSP, FFTW
 include("Mel.jl")
 include("Filterbanks.jl")
 using MFCC.Mel
